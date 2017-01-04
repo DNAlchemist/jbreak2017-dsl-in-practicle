@@ -17,6 +17,13 @@ class DatabaseSpec extends Specification {
     String dbTestUrl
     Database db
 
+    @CompileStatic
+    Model db(String arg) { db.call(arg) }
+
+    @CompileStatic
+    <T> T db(Class<T> arg) { db.call(arg) }
+
+    @CompileStatic
     def setup() {
         def destinationFile = new File(testProjectDir.newFolder(), "test.db");
         dbTestUrl = "jdbc:sqlite:${destinationFile.absolutePath}"
@@ -24,6 +31,7 @@ class DatabaseSpec extends Specification {
         db = new Database(queryExecutor)
     }
 
+    @CompileStatic
     def "Get table from db returns EntityModel"() {
         when:
         def result = db "users"
@@ -44,6 +52,7 @@ class DatabaseSpec extends Specification {
         result == [[name:'Homer', password:'qwerty']]
     }
 
+    @CompileStatic
     def "Class annotated as Entity have executor field"() {
         when:
         new User().executor
@@ -51,6 +60,7 @@ class DatabaseSpec extends Specification {
         noExceptionThrown()
     }
 
+    @CompileStatic
     def "Class users from db have executor inside"() {
         when:
         def result = db User executor

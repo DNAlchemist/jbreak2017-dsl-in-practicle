@@ -1,5 +1,6 @@
 package ru.jbreak
 
+import groovy.transform.CompileStatic
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
@@ -27,5 +28,26 @@ class DatabaseSpec extends Specification {
         def result = db "users"
         then:
         result instanceof Database.EntityModel
+    }
+
+    def "Class annotated as Entity have executor field"() {
+        when:
+        new Users().executor
+        then:
+        noExceptionThrown()
+    }
+
+    def "Class users from db have executor inside"() {
+        when:
+        def result = db Users executor
+        println result
+        then:
+        result
+    }
+
+    @Entity
+    @CompileStatic
+    public class Users<T> {
+        def name;
     }
 }

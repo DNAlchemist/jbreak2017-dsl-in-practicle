@@ -9,7 +9,7 @@ import spock.lang.Specification
 /*
  * @author ruslanmikhalev, @date 12/30/16 7:41 PM
  */
-class JdbcQueryExecutorTest extends Specification {
+class JdbcQueryExecutorSpec extends Specification {
 
     @Rule
     final TemporaryFolder testProjectDir = new TemporaryFolder()

@@ -1,12 +1,14 @@
 package ru.jbreak
 
 import groovy.sql.Sql
+import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
 /*
  * @author ruslanmikhalev, @date 12/30/16 8:12 PM
  */
 @Slf4j
+@CompileStatic
 public class JdbcQueryExecutor implements QueryExecutor {
 
     final String url;
@@ -36,7 +38,7 @@ public class JdbcQueryExecutor implements QueryExecutor {
     @Override
     public List<?> select(String entity, Map<String, Object> criteria) {
         assert criteria : "Criteria must not be empty"
-        def result = null
+        List<?> result = null
         Sql.withInstance(url) { Sql sql ->
             result = sql.rows("SELECT * FROM $entity WHERE"
                     + criteria

@@ -46,4 +46,13 @@ public class JdbcQueryExecutor implements QueryExecutor {
         return result
     }
 
+    @Override
+    void insert(String entity, Map<String, Object> params) {
+        Sql.withInstance(url) { Sql sql ->
+            sql.executeInsert("\
+                                INSERT INTO $entity(${params.keySet().join(", ")}) \
+                                VALUES(${params.values().collect({"?"}).join(", ")})"
+                                .stripIndent(), params.values() as Object[])
+        }
+    }
 }

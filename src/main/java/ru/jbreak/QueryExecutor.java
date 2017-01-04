@@ -9,4 +9,5 @@ import java.util.Map;
 interface QueryExecutor {
     int update(String entity, Map<String, Object> id, Map<String, Object> updateValues);
     List<?> select(String entity, Map<String, Object> criteria);
+    void insert(String entity, Map<String, Object> values);
 }

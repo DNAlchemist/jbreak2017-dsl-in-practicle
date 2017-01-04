@@ -66,6 +66,21 @@ class JdbcQueryExecutorTest extends Specification {
         result == [[name:'Homer', password:'123'], [name:'Lisa', password:'qwerty']]
     }
 
+    def "Jdbc query insert is working correct"() {
+        setup:
+        Sql.withInstance(dbTestUrl) { Sql sql ->
+            prepareTable(sql)
+        }
+        when:
+        def result = null;
+        db.insert("users", [name:'Homer', password:"123"])
+        Sql.withInstance(dbTestUrl) { Sql sql ->
+            result = sql.rows("SELECT * FROM users")
+        }
+        then:
+        result == [[name:'Homer', password:'123']]
+    }
+
     def prepareTable(Sql sql) {
         try {
             sql.execute("DROP TABLE users")

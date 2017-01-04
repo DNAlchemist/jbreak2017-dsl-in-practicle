@@ -13,10 +13,8 @@ import org.codehaus.groovy.transform.GroovyASTTransformation
  */
 @GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)
 class EntityTransformation implements ASTTransformation {
-
     @Override
     void visit(ASTNode[] nodes, SourceUnit source) {
         source.AST.classes[1].addField("executor", Opcodes.ACC_PUBLIC | Opcodes.ACC_SYNTHETIC, ClassHelper.make(QueryExecutor), null)
     }
-
 }

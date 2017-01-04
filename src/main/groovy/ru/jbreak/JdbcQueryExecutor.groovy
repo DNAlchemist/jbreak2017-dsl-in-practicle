@@ -49,12 +49,13 @@ public class JdbcQueryExecutor implements QueryExecutor {
     }
 
     @Override
-    void insert(String entity, Map<String, Object> params) {
+    void insert(String entity, Map<String, Object> values) {
+        assert values : "Values must not be empty"
         Sql.withInstance(url) { Sql sql ->
             sql.executeInsert("\
-                                INSERT INTO $entity(${params.keySet().join(", ")}) \
-                                VALUES(${params.values().collect({"?"}).join(", ")})"
-                                .stripIndent(), params.values() as Object[])
+                                INSERT INTO $entity(${values.keySet().join(", ")}) \
+                                VALUES(${values.values().collect({"?"}).join(", ")})"
+                                .stripIndent(), values.values() as Object[])
         }
     }
 }

@@ -34,7 +34,7 @@ class DatabaseSpec extends Specification {
     def "Get simple sql string from missing method"() {
         setup:
         Sql.withInstance(dbTestUrl) { Sql sql ->
-            prepareTable(sql)
+            sql.execute("CREATE TABLE users(name, password)")
             sql.execute("INSERT INTO users(name, password) VALUES('Homer', 'qwerty')")
             sql.execute("INSERT INTO users(name, password) VALUES('Lisa', 'qwerty')")
         }
@@ -54,23 +54,14 @@ class DatabaseSpec extends Specification {
     def "Class users from db have executor inside"() {
         when:
         def result = db User executor
-        println result
         then:
-        result
+        result instanceof QueryExecutor
     }
 
     @Entity
     @CompileStatic
-    public static class User<T> {
+    public static class User {
         def name;
     }
 
-    def prepareTable(Sql sql) {
-        try {
-            sql.execute("DROP TABLE users")
-        } catch (ignored) {
-            // table already exists
-        }
-        sql.execute("CREATE TABLE users(name, password)")
-    }
 }

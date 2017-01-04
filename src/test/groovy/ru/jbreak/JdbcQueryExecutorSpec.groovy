@@ -1,5 +1,6 @@
 package ru.jbreak
 
+import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
@@ -26,20 +27,20 @@ class JdbcQueryExecutorSpec extends Specification {
     def "Jdbc query execution result exists"() {
         setup:
         Sql.withInstance(dbTestUrl) { Sql sql ->
-            prepareTable(sql)
+            sql.execute("CREATE TABLE users(name, password)")
             sql.execute("INSERT INTO users(name, password) VALUES('Homer', 'qwerty')")
             sql.execute("INSERT INTO users(name, password) VALUES('Lisa', 'qwerty')")
         }
         when:
         def result = db.select("users", [name:"Homer"])
         then:
-        result == [[name:'Homer', password:'qwerty']]
+        result == [[name:'Homer', password:'qwerty']] as List<GroovyRowResult>
     }
 
     def "Jdbc query update count is working correct"() {
         setup:
         Sql.withInstance(dbTestUrl) { Sql sql ->
-            prepareTable(sql)
+            sql.execute("CREATE TABLE users(name, password)")
             sql.execute("INSERT INTO users(name, password) VALUES('Homer', 'qwerty')")
             sql.execute("INSERT INTO users(name, password) VALUES('Lisa', 'qwerty')")
         }
@@ -52,7 +53,7 @@ class JdbcQueryExecutorSpec extends Specification {
     def "Jdbc query update is working correct"() {
         setup:
         Sql.withInstance(dbTestUrl) { Sql sql ->
-            prepareTable(sql)
+            sql.execute("CREATE TABLE users(name, password)")
             sql.execute("INSERT INTO users(name, password) VALUES('Homer', 'qwerty')")
             sql.execute("INSERT INTO users(name, password) VALUES('Lisa', 'qwerty')")
         }
@@ -68,9 +69,7 @@ class JdbcQueryExecutorSpec extends Specification {
 
     def "Jdbc query insert is working correct"() {
         setup:
-        Sql.withInstance(dbTestUrl) { Sql sql ->
-            prepareTable(sql)
-        }
+        Sql.withInstance(dbTestUrl, { Sql sql -> sql.execute("CREATE TABLE users(name, password)") })
         when:
         def result = null;
         db.insert("users", [name:'Homer', password:"123"])
@@ -81,12 +80,4 @@ class JdbcQueryExecutorSpec extends Specification {
         result == [[name:'Homer', password:'123']]
     }
 
-    def prepareTable(Sql sql) {
-        try {
-            sql.execute("DROP TABLE users")
-        } catch (ignored) {
-            // table already exists
-        }
-        sql.execute("CREATE TABLE users(name, password)")
-    }
 }

@@ -22,10 +22,10 @@ class DatabaseSpec extends Specification {
         db = new Database(queryExecutor)
     }
 
-    def "Creating table on left shift"() {
+    def "Get table from db returns EntityModel"() {
         when:
         def result = db "users"
         then:
-        result
+        result instanceof Database.EntityModel
     }
 }

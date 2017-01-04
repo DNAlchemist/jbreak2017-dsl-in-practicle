@@ -12,8 +12,8 @@ class DatabaseSpec extends Specification {
     @Rule
     final TemporaryFolder testProjectDir = new TemporaryFolder()
 
-    String dbTestUrl;
-    Database db;
+    String dbTestUrl
+    Database db
 
     def setup() {
         def destinationFile = new File(testProjectDir.newFolder(), "test.db");
@@ -26,6 +26,13 @@ class DatabaseSpec extends Specification {
         when:
         def result = db "users"
         then:
-        result instanceof Database.EntityModel
+        result instanceof Database.Entity
+    }
+
+    def "Get simple sql string from missing method"() {
+        when:
+        def result = db "users" getByNameAndSex "Вася", "male"
+        then:
+        result == "SELECT * FROM users WHERE Name = Вася And Sex = male"
     }
 }

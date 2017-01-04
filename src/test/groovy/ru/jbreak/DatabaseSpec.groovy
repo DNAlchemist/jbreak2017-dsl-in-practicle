@@ -39,14 +39,14 @@ class DatabaseSpec extends Specification {
 
     def "Class annotated as Entity have executor field"() {
         when:
-        new Users().executor
+        new User().executor
         then:
         noExceptionThrown()
     }
 
     def "Class users from db have executor inside"() {
         when:
-        def result = db Users executor
+        def result = db User executor
         println result
         then:
         result
@@ -54,7 +54,7 @@ class DatabaseSpec extends Specification {
 
     @Entity
     @CompileStatic
-    public class Users<T> {
+    public static class User<T> {
         def name;
     }
 }

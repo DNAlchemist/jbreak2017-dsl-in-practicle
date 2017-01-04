@@ -1,5 +1,6 @@
 package ru.jbreak
 
+import groovy.transform.CompileStatic
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
@@ -26,13 +27,34 @@ class DatabaseSpec extends Specification {
         when:
         def result = db "users"
         then:
-        result instanceof Database.Entity
+        result instanceof Model
     }
 
     def "Get simple sql string from missing method"() {
         when:
-        def result = db "users" getByNameAndSex "Вася", "male"
+        def result = db "users" findBySexAndName "male", "Вася"
         then:
-        result == "SELECT * FROM users WHERE Name = Вася And Sex = male"
+        result == "SELECT * FROM users WHERE Sex = male And Name = Вася"
+    }
+
+    def "Class annotated as Entity have executor field"() {
+        when:
+        new Users().executor
+        then:
+        noExceptionThrown()
+    }
+
+    def "Class users from db have executor inside"() {
+        when:
+        def result = db Users executor
+        println result
+        then:
+        result
+    }
+
+    @Entity
+    @CompileStatic
+    public class Users<T> {
+        def name;
     }
 }

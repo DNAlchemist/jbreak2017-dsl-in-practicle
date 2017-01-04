@@ -1,5 +1,7 @@
 package ru.jbreak
 
+import groovy.transform.CompileStatic
+
 /**
  * Created by ruslanmikhalev on 04/01/17.
  */
@@ -11,22 +13,12 @@ class Database {
         this.queryExecutor = queryExecutor
     }
 
-    def call(String entity) { new Entity(entity) }
+    @CompileStatic
+    def call(String entity) { new Model(entity) }
 
-    public class Entity {
-        String name
-        private final tokens = ["And", "Or"]
-
-        Entity(String name) {
-            this.name = name
-        }
-
-        def methodMissing(String methodName, args) {
-            args = args.reverse() as List
-            "SELECT * FROM $name WHERE " + (methodName["findBy".length()..-1] =~ /([A-Z][a-z0-9]*)/)
-                    .collect {
-                (tokens.contains(it[0])) ? it[0] : "${it[0]} = ${args.pop()}"
-            }.join(" ")
-        }
+    def <T> T call(Class<T> clazz) {
+        def entity = clazz.newInstance()
+        entity.executor = queryExecutor
+        return entity
     }
 }

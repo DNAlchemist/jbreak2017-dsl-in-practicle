@@ -7,16 +7,16 @@ import groovy.util.logging.Slf4j
  * @author ruslanmikhalev, @date 12/30/16 8:12 PM
  */
 @Slf4j
-public class JdbcQueryExecutor implements QueryExecutor {
+class JdbcQueryExecutor implements QueryExecutor {
 
-    final String url;
+    final String url
 
-    public JdbcQueryExecutor(String url) {
-        this.url = url;
+     JdbcQueryExecutor(String url) {
+        this.url = url
     }
 
     @Override
-    public int update(String entity, Map<String, Object> criteria, Map<String, Object> updateValues) {
+    int update(String entity, Map<String, Object> criteria, Map<String, Object> updateValues) {
         assert criteria : "Criteria must not be empty"
         assert updateValues : "Update values must not be empty"
         int result = 0
@@ -34,7 +34,7 @@ public class JdbcQueryExecutor implements QueryExecutor {
     }
 
     @Override
-    public List<?> select(String entity, Map<String, Object> criteria) {
+    List<?> select(String entity, Map<String, Object> criteria) {
         assert criteria : "Criteria must not be empty"
         def result = null
         Sql.withInstance(url) { Sql sql ->
@@ -45,5 +45,4 @@ public class JdbcQueryExecutor implements QueryExecutor {
         }
         return result
     }
-
 }

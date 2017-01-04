@@ -1,3 +1,6 @@
+group 'ru.jbreak'
+version '0.0.1-SNAPSHOT'
+
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'eclipse'
@@ -9,9 +12,9 @@ repositories {
 }
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.5.0-SNAPSHOT:indy'
-    compile 'org.xerial:sqlite-jdbc:3.15.1'
-    compile 'ch.qos.logback:logback-classic:1.1.8'
+    compile 'org.codehaus.groovy:groovy-all:2.5.0-SNAPSHOT:indy',
+            'org.xerial:sqlite-jdbc:3.15.1',
+            'ch.qos.logback:logback-classic:1.1.8'
 
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
 }

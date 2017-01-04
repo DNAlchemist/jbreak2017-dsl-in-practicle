@@ -14,11 +14,11 @@ class JdbcQueryExecutorTest extends Specification {
     @Rule
     final TemporaryFolder testProjectDir = new TemporaryFolder()
 
-    String dbTestUrl;
-    JdbcQueryExecutor db;
+    String dbTestUrl
+    JdbcQueryExecutor db
 
     def setup() {
-        def destinationFile = new File(testProjectDir.newFolder(), "test.db");
+        def destinationFile = new File(testProjectDir.newFolder(), "test.db")
         dbTestUrl = "jdbc:sqlite:${destinationFile.absolutePath}"
         db = new JdbcQueryExecutor(dbTestUrl)
     }
@@ -31,9 +31,9 @@ class JdbcQueryExecutorTest extends Specification {
             sql.execute("INSERT INTO users(name, password) VALUES('Lisa', 'qwerty')")
         }
         when:
-        def result = db.select("users", [name:"Homer"])
+        def result = db.select("users", [name: "Homer"])
         then:
-        result == [[name:'Homer', password:'qwerty']]
+        result == [[name: 'Homer', password: 'qwerty']]
     }
 
     def "Jdbc query update count is working correct"() {
@@ -44,7 +44,7 @@ class JdbcQueryExecutorTest extends Specification {
             sql.execute("INSERT INTO users(name, password) VALUES('Lisa', 'qwerty')")
         }
         when:
-        def count = db.update("users", [name:'Homer'], [password:"123"])
+        def count = db.update("users", [name: 'Homer'], [password: "123"])
         then:
         count == 1
     }
@@ -58,12 +58,12 @@ class JdbcQueryExecutorTest extends Specification {
         }
         when:
         def result = null;
-        db.update("users", [name:'Homer'], [password:"123"])
+        db.update("users", [name: 'Homer'], [password: "123"])
         Sql.withInstance(dbTestUrl) { Sql sql ->
             result = sql.rows("SELECT * FROM users")
         }
         then:
-        result == [[name:'Homer', password:'123'], [name:'Lisa', password:'qwerty']]
+        result == [[name: 'Homer', password: '123'], [name: 'Lisa', password: 'qwerty']]
     }
 
     def prepareTable(Sql sql) {

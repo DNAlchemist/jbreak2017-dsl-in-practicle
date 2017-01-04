@@ -1,5 +1,6 @@
 package ru.jbreak
 
+import groovy.sql.Sql
 import groovy.transform.CompileStatic
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
@@ -31,10 +32,16 @@ class DatabaseSpec extends Specification {
     }
 
     def "Get simple sql string from missing method"() {
+        setup:
+        Sql.withInstance(dbTestUrl) { Sql sql ->
+            prepareTable(sql)
+            sql.execute("INSERT INTO users(name, password) VALUES('Homer', 'qwerty')")
+            sql.execute("INSERT INTO users(name, password) VALUES('Lisa', 'qwerty')")
+        }
         when:
-        def result = db "users" findBySexAndName "male", "Вася"
+        def result = db "users" findByNameAndPassword "Homer", "qwerty"
         then:
-        result == "SELECT * FROM users WHERE Sex = male And Name = Вася"
+        result == [[name:'Homer', password:'qwerty']]
     }
 
     def "Class annotated as Entity have executor field"() {
@@ -56,5 +63,14 @@ class DatabaseSpec extends Specification {
     @CompileStatic
     public static class User<T> {
         def name;
+    }
+
+    def prepareTable(Sql sql) {
+        try {
+            sql.execute("DROP TABLE users")
+        } catch (ignored) {
+            // table already exists
+        }
+        sql.execute("CREATE TABLE users(name, password)")
     }
 }

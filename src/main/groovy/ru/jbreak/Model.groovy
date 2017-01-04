@@ -5,17 +5,20 @@ package ru.jbreak
  */
 class Model {
     String name
+    QueryExecutor executor
     private final List tokens = ["And", "Or"]
 
-    Model(String name) {
+    Model(String name, QueryExecutor executor) {
         this.name = name
+        this.executor = executor
     }
 
     def methodMissing(String methodName, args) {
         List params = args as List
-        "SELECT * FROM $name WHERE " + (methodName["findBy".length()..-1] =~ /([A-Z][a-z0-9]*)/)
-                .collect {
-            (tokens.contains(it[0])) ? it[0] : "${it[0]} = ${params.pop()}"
-        }.join(" ")
+        def criteria = (methodName["findBy".length()..-1] =~ /([A-Z][a-z0-9]*)/)
+                .findAll { !tokens.contains(it[0]) }
+                .inject([:]) { map, col -> map << [(col[0]): params.pop()] }
+
+        executor.select(name, criteria)
     }
 }

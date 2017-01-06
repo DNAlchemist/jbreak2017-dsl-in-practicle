@@ -14,7 +14,7 @@ class Database {
     }
 
     @CompileStatic
-    def call(String entity) { new Model(entity, queryExecutor) }
+    Model call(String entity) { new Model(entity, queryExecutor) }
 
     def <T> T call(Class<T> clazz) {
         def entity = clazz.newInstance()

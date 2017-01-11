@@ -1,0 +1,7 @@
+package ru.jbreak
+
+contributor(context()) {
+    if(classType?.hasAnnotation("ru.jbreak.Db")) {
+        property(name: 'db', type: "ru.jbreak.Database")
+    }
+}

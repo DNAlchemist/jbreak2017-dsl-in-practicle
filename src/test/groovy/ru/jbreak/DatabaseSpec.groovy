@@ -67,11 +67,4 @@ class DatabaseSpec extends Specification {
         then:
         result instanceof QueryExecutor
     }
-
-    @Entity
-    @CompileStatic
-    public static class User {
-        def name;
-    }
-
 }

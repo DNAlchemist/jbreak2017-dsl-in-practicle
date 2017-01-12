@@ -75,8 +75,8 @@ class DbTransformationSpec extends Specification {
         when:
         def result = instance["db"]["queryExecutor"]["url"]
         then:
+        notThrown(MissingPropertyException)
         result == dbTestUrl
     }
-
 
 }

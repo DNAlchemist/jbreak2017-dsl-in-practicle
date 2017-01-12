@@ -49,21 +49,22 @@ class DatabaseSpec extends Specification {
         when:
         def result = db "users" findByNameAndPassword "Homer", "qwerty"
         then:
+        noExceptionThrown()
         result == [[name:'Homer', password:'qwerty']]
     }
 
     @CompileStatic
     def "Class annotated as Entity have executor field"() {
         when:
-        new User().executor
+        def result = new User().hasProperty("executor")
         then:
-        noExceptionThrown()
+        result
     }
 
     @CompileStatic
     def "Class users from db have executor inside"() {
         when:
-        def result = db User executor
+        def result = db(User).getProperty("executor")
         then:
         result instanceof QueryExecutor
     }

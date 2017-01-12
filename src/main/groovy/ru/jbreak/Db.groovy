@@ -1,6 +1,5 @@
 package ru.jbreak
 
-import groovy.transform.CompileStatic
 import org.codehaus.groovy.transform.GroovyASTTransformationClass
 
 import java.lang.annotation.ElementType
@@ -14,7 +13,6 @@ import java.lang.annotation.Target
 @Retention (RetentionPolicy.SOURCE)
 @Target([ElementType.TYPE])
 @GroovyASTTransformationClass(["ru.jbreak.DbTransformation"])
-@CompileStatic
 public @interface Db {
     String value()
 }

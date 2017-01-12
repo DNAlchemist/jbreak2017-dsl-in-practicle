@@ -13,5 +13,5 @@ import java.lang.annotation.Target
 @Target([ElementType.TYPE])
 @GroovyASTTransformationClass(["ru.jbreak.EntityTransformation"])
 public @interface Entity {
-
+    String value()
 }

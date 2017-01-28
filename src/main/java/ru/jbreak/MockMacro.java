@@ -21,12 +21,12 @@ import static org.codehaus.groovy.ast.tools.GeneralUtils.closureX;
 public class MockMacro {
     @Macro
     public static Expression Mock(MacroContext macroContext, ClassExpression classExpression) {
-        return Mock(macroContext, classExpression, null);
+        return callX(new ClassNode(Mockito.class), "mock", args(classExpression));
     }
 
     @Macro
     public static Expression Mock(MacroContext macroContext, ClassExpression classExpression, ClosureExpression closureExpression) {
-        StaticMethodCallExpression mock = callX(new ClassNode(Mockito.class), "mock", args(classExpression));
+        StaticMethodCallExpression mock = (StaticMethodCallExpression) Mock(macroContext, classExpression);
 
 //        Service serv = Mockito.mock(Service.class);
 //        Mockito.when(serv.getId()).thenReturn(1);

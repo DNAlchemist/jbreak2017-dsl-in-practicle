@@ -23,8 +23,14 @@ class SpockMacroTransformationTest extends GroovyTestCase {
     }
 
     def service = Mock(Service) {
-        getId: { 1 }
-        getName: { "Вася" }
+        getId: { 
+            println "123"; 
+            return 1 
+        }
+        getName: { 
+            println "123"; 
+            return "Вася" 
+        }
     }
 
     assert service.getDefault() == null

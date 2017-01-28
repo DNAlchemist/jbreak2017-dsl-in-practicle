@@ -4,6 +4,7 @@ import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.expr.ClassExpression;
 import org.codehaus.groovy.ast.expr.ClosureExpression;
 import org.codehaus.groovy.ast.expr.Expression;
+import org.codehaus.groovy.ast.expr.MethodCallExpression;
 import org.codehaus.groovy.ast.expr.StaticMethodCallExpression;
 import org.codehaus.groovy.ast.stmt.BlockStatement;
 import org.codehaus.groovy.ast.stmt.Statement;
@@ -28,22 +29,16 @@ public class MockMacro {
     public static Expression Mock(MacroContext macroContext, ClassExpression classExpression, ClosureExpression closureExpression) {
         StaticMethodCallExpression mock = (StaticMethodCallExpression) Mock(macroContext, classExpression);
 
-//        Service serv = Mockito.mock(Service.class);
-//        Mockito.when(serv.getId()).thenReturn(1);
-
         for (Statement statement : ((BlockStatement) closureExpression.getCode()).getStatements()) {
             String label = statement.getStatementLabel();
 
             StaticMethodCallExpression when = callX(new ClassNode(Mockito.class), "when", args(callX(mock, label)));
 
-            BlockStatement closureBlockStatement = new BlockStatement();
-            closureBlockStatement.addStatement(statement);
-            ClosureExpression result = closureX(closureBlockStatement);
-            result.setVariableScope(closureExpression.getVariableScope().copy());
+            ClosureExpression then = closureX(statement);
+            MethodCallExpression result = callX(then, "call");
 
-            callX(when, "thenReturn", callX(result, "call"));
+            callX(when, "thenReturn", result);
         }
         return mock;
     }
-
 }
